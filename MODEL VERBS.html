@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Superhero Modal Academy - 5th Grade ELA Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            comic: ['Bungee', 'cursive'],
+            kid: ['Fredoka', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            brandYellow: '#FCD34D',
+            brandOrange: '#FB923C',
+            brandBlue: '#38BDF8',
+            brandDarkBlue: '#0284C7',
+            heroPurple: '#8B5CF6',
+            heroPink: '#EC4899',
+            heroGreen: '#10B981',
+          },
+          boxShadow: {
+            'comic': '4px 4px 0px 0px #0f172a',
+            'comic-lg': '6px 6px 0px 0px #0f172a',
+            'comic-sm': '2px 2px 0px 0px #0f172a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0369a1 100%);
+      min-height: 100vh;
+      font-family: 'Fredoka', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
+    }
+
+    .comic-border {
+      border: 3px solid #0f172a;
+    }
+
+    .comic-border-thick {
+      border: 4px solid #0f172a;
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.7)); }
+      50% { filter: drop-shadow(0 0 22px rgba(236, 72, 153, 0.9)); }
+    }
+
+    .pop-in {
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .shake-anim {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+
+    /* Subtle hovering bob for the gliding character */
+    .boy-glide {
+      animation: boyFloat 2.2s infinite ease-in-out;
+    }
+
+    @keyframes boyFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .boy-jump {
+      animation: boyJump 0.8s ease-in-out forwards;
+    }
+
+    @keyframes boyJump {
+      0%, 100% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-35px) scale(1.12); }
+      70% { transform: translateY(-15px) scale(1.06); }
+    }
+
+    /* Fixed size speech bubble and stem */
+    .speech-bubble-fixed {
+      width: 250px;
+      height: 88px;
+      position: relative;
+    }
+
+    .speech-bubble-stem::after {
+      content: '';
+      position: absolute;
+      bottom: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 12px solid #0f172a;
+    }
+
+    .speech-bubble-stem::before {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 9px solid #ffffff;
+      z-index: 1;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #certificate-modal, #certificate-modal * {
+        visibility: visible;
+      }
+      #certificate-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: white !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between items-center p-2 sm:p-4 selection:bg-brandYellow">
+
+  <!-- Header Navigation & Status Bar -->
+  <header class="w-full max-w-5xl bg-white/95 backdrop-blur-md comic-border-thick rounded-3xl p-3 sm:p-4 mb-3 sm:mb-4 shadow-comic-lg flex flex-wrap items-center justify-between gap-3 relative z-30">
+    <div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="showScreen('screen-welcome')">
+      <div class="w-12 h-12 bg-brandYellow rounded-2xl comic-border flex items-center justify-center text-2xl shadow-comic-sm transform -rotate-3 hover:rotate-6 transition">
+        ⚡
+      </div>
+      <div>
+        <h1 class="font-comic text-lg sm:text-xl text-slate-900 leading-tight tracking-wider">
+          MODAL ACADEMY
+        </h1>
+        <p class="text-xs font-bold text-heroPurple tracking-wide flex items-center gap-1">
+          <span>CCSS.ELA Grade 5 Core Verbs</span>
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Live Game Stats -->
+    <div id="top-stats-bar" class="hidden flex items-center gap-2 sm:gap-4 flex-wrap">
+      <!-- Streak -->
+      <div class="flex items-center gap-1 bg-amber-100 comic-border px-3 py-1 rounded-2xl shadow-comic-sm">
+        <span class="text-lg">🔥</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-900">Streak:</span>
+        <span id="streak-counter" class="font-comic text-amber-700 text-sm">0</span>
+      </div>
+
+      <!-- Score -->
+      <div class="flex items-center gap-1 bg-sky-100 comic-border px-3 py-1 rounded-2xl shadow-comic-sm">
+        <span class="text-lg">⭐</span>
+        <span id="score-counter" class="font-comic text-sky-800 text-base">0 pts</span>
+      </div>
+
+      <!-- Power Bar -->
+      <div class="w-24 sm:w-28 bg-slate-200 comic-border rounded-full h-4 overflow-hidden relative" title="Hero Mission Progress">
+        <div id="power-bar" class="bg-gradient-to-r from-yellow-400 to-amber-500 h-full w-0 transition-all duration-300"></div>
+      </div>
+    </div>
+
+    <!-- Controls: Sound Toggle, Rulebook, Home -->
+    <div class="flex items-center gap-2">
+      <button id="audio-toggle-btn" class="w-10 h-10 bg-indigo-100 hover:bg-indigo-200 comic-border rounded-2xl flex items-center justify-center text-lg shadow-comic-sm active:translate-y-0.5 transition" title="Toggle Sound">
+        🔊
+      </button>
+      <button id="rulebook-btn" class="w-10 h-10 bg-amber-100 hover:bg-amber-200 comic-border rounded-2xl flex items-center justify-center text-lg shadow-comic-sm active:translate-y-0.5 transition" title="Modal Verb Rulebook">
+        📖
+      </button>
+      <button id="exit-btn" class="hidden w-10 h-10 bg-rose-100 hover:bg-rose-200 comic-border rounded-2xl flex items-center justify-center text-lg shadow-comic-sm active:translate-y-0.5 transition" title="Back to Headquarters">
+        🏠
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="w-full max-w-5xl relative z-10 flex-1 flex flex-col justify-center">
+
+    <!-- SCREEN 1: WELCOME & LEVEL SELECT -->
+    <div id="screen-welcome" class="bg-white comic-border-thick rounded-3xl p-5 sm:p-8 shadow-comic-lg text-center pop-in">
+      <div class="inline-flex items-center gap-2 bg-yellow-300 comic-border px-4 py-1.5 rounded-full font-comic text-xs uppercase tracking-widest text-slate-900 mb-3 shadow-comic-sm">
+        🎖️ Elementary ELA Training Base
+      </div>
+
+      <h2 class="font-comic text-3xl sm:text-4xl text-slate-900 tracking-wide mb-2">
+        COMMAND THE <span class="text-heroPurple underline decoration-brandYellow">MODAL VERBS</span>!
+      </h2>
+      <p class="font-kid text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-6">
+        Modals are helper verbs that express <strong class="text-indigo-600">ability</strong> (can), <strong class="text-rose-500">rules & obligation</strong> (must), <strong class="text-amber-500">permission</strong> (may), <strong class="text-emerald-600">advice</strong> (should), and <strong class="text-sky-500">possibility</strong> (might)!
+      </p>
+
+      <!-- Level Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Level 1 -->
+        <button onclick="startGame(1)" class="group bg-gradient-to-br from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 comic-border-thick p-5 rounded-2xl text-left shadow-comic hover:-translate-y-1 transition duration-200 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-amber-400 comic-border px-2.5 py-0.5 rounded-lg text-xs font-comic">LEVEL 1</span>
+              <span class="text-2xl">🦸‍♂️</span>
+            </div>
+            <h3 class="font-comic text-lg text-slate-900 mb-1">Sentence Power-Up</h3>
+            <p class="font-kid text-xs sm:text-sm text-slate-600">Fill in the blanks with the correct modal verb in school and safety contexts.</p>
+          </div>
+          <div class="mt-4 pt-2 border-t-2 border-slate-900/10 flex items-center justify-between font-bold text-xs text-amber-800">
+            <span>10 Missions</span>
+            <span>Start Level 1 →</span>
+          </div>
+        </button>
+
+        <!-- Level 2 -->
+        <button onclick="startGame(2)" class="group bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 comic-border-thick p-5 rounded-2xl text-left shadow-comic hover:-translate-y-1 transition duration-200 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-purple-400 text-white comic-border px-2.5 py-0.5 rounded-lg text-xs font-comic">LEVEL 2</span>
+              <span class="text-2xl">🕵️‍♀️</span>
+            </div>
+            <h3 class="font-comic text-lg text-slate-900 mb-1">Meaning Detective</h3>
+            <p class="font-kid text-xs sm:text-sm text-slate-600">Determine what nuance the modal verb is expressing: Ability, Rule, Advice, or May/Might!</p>
+          </div>
+          <div class="mt-4 pt-2 border-t-2 border-slate-900/10 flex items-center justify-between font-bold text-xs text-purple-900">
+            <span>10 Missions</span>
+            <span>Investigate →</span>
+          </div>
+        </button>
+
+        <!-- Level 3 (Interactive Playground Walking Boys) -->
+        <button onclick="startGame(3)" class="group bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-100 hover:from-emerald-100 hover:to-sky-200 comic-border-thick p-5 rounded-2xl text-left shadow-comic hover:-translate-y-1 transition duration-200 relative overflow-hidden flex flex-col justify-between border-emerald-500">
+          <div class="absolute -right-2 -top-2 bg-rose-500 text-white text-[10px] font-comic px-2 py-0.5 rounded-full comic-border transform rotate-6 animate-pulse">
+            NEW!
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="bg-emerald-400 text-slate-900 comic-border px-2.5 py-0.5 rounded-lg text-xs font-comic">LEVEL 3</span>
+              <span class="text-2xl">🏃‍♂️💬</span>
+            </div>
+            <h3 class="font-comic text-lg text-emerald-900 mb-1">Choose the correct sentence</h3>
+            <p class="font-kid text-xs sm:text-sm text-slate-600">Each boy passes across carrying a sentence in his bubble. Tap him to choose!</p>
+          </div>
+          <div class="mt-4 pt-2 border-t-2 border-slate-900/10 flex items-center justify-between font-bold text-xs text-emerald-800">
+            <span>One-by-One Parade</span>
+            <span>Start Level 3 ➔</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Quick Action: Full Marathon -->
+      <button onclick="startGame('marathon')" class="w-full max-w-md mx-auto bg-gradient-to-r from-yellow-400 via-orange-400 to-rose-400 hover:brightness-105 active:scale-95 comic-border-thick py-3 px-6 rounded-2xl font-comic text-base text-slate-900 shadow-comic flex items-center justify-center gap-2 transition">
+        <span>🚀 ALL-ROUND GRAND CHALLENGE (30 Questions)</span>
+      </button>
+    </div>
+
+    <!-- SCREEN 2: GAMEPLAY SCREEN -->
+    <div id="screen-game" class="hidden bg-white comic-border-thick rounded-3xl p-4 sm:p-6 shadow-comic-lg relative pop-in">
+      
+      <!-- Progress Bar & Mission Tracker -->
+      <div class="flex items-center justify-between gap-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span id="level-badge" class="bg-indigo-600 text-white comic-border text-xs font-comic px-3 py-1 rounded-xl uppercase">
+            Level 1
+          </span>
+          <span id="question-tracker" class="font-bold text-xs sm:text-sm text-slate-600">
+            Mission 1 of 10
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5 bg-emerald-100 text-emerald-800 comic-border px-3 py-1 rounded-xl font-bold text-xs">
+          <span>🧘</span>
+          <span>Relaxed Practice</span>
+        </div>
+      </div>
+
+      <!-- Question Speech Bubble Prompt -->
+      <div class="bg-amber-50 comic-border-thick rounded-2xl p-4 sm:p-5 mb-4 relative shadow-comic">
+        <div class="flex items-start gap-3 sm:gap-4">
+          <div id="mentor-avatar" class="text-3xl sm:text-4xl bg-brandYellow comic-border rounded-2xl p-2 shrink-0 select-none shadow-comic-sm">
+            🦸
+          </div>
+          <div class="flex-1">
+            <span id="question-category" class="inline-block bg-brandBlue text-white comic-border text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-md mb-1.5">
+              Target: Obligation
+            </span>
+            <div id="question-text" class="text-base sm:text-xl font-kid font-bold text-slate-900 leading-snug">
+              Loading question prompt...
+            </div>
+            <div id="question-hint" class="text-xs sm:text-sm text-indigo-700 mt-1.5 italic font-medium">
+              Clue: Look for the rule keyword!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STANDARD MULTIPLE CHOICE (Level 1 & 2) -->
+      <div id="standard-options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3">
+        <!-- Buttons injected dynamically -->
+      </div>
+
+      <!-- LEVEL 3 INTERACTIVE PLAYGROUND (Single Boy Sequential Parade) -->
+      <div id="playground-container" class="hidden relative w-full h-[360px] sm:h-[400px] comic-border-thick rounded-2xl overflow-hidden mb-3 shadow-comic select-none">
+        <!-- Park/Playground Background -->
+        <div class="absolute inset-0 bg-gradient-to-b from-sky-300 via-sky-100 to-emerald-200 pointer-events-none">
+          <!-- Sun & Clouds in background -->
+          <div class="absolute top-4 right-8 text-4xl animate-pulse">☀️</div>
+          <div class="absolute top-6 left-12 text-3xl opacity-80">☁️</div>
+          <div class="absolute top-12 left-1/2 text-2xl opacity-60">☁️</div>
+          <!-- Distant school building and trees -->
+          <div class="absolute bottom-20 left-6 text-3xl">🏫</div>
+          <div class="absolute bottom-20 right-8 text-4xl">🌳</div>
+          <div class="absolute bottom-20 right-28 text-3xl">🌲</div>
+          <div class="absolute bottom-20 left-36 text-2xl">⚽</div>
+          <!-- Grass Playground Floor -->
+          <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-emerald-600 to-emerald-400 border-t-4 border-slate-900 flex items-center justify-between px-4 sm:px-6">
+            <span class="text-xs font-comic text-emerald-950 uppercase tracking-widest bg-emerald-300/80 comic-border px-3 py-1 rounded-full shadow-comic-sm">
+              🚶 Parade stroll • Click any boy or bubble to answer!
+            </span>
+            <div class="flex items-center gap-2 pointer-events-auto">
+              <span class="text-xs font-bold text-emerald-950 bg-white/70 px-2 py-0.5 rounded-lg">4 Options in Parade</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Walking Boys Area -->
+        <div id="boys-stage" class="absolute inset-0 pointer-events-auto">
+          <!-- Injected dynamically: boys stroll across in spaced staggered queue -->
+        </div>
+      </div>
+
+      <!-- Feedback Banner (Hidden by default) -->
+      <div id="feedback-card" class="hidden comic-border-thick rounded-2xl p-4 mb-2 transition-all duration-200 relative z-20">
+        <div class="flex items-start gap-3">
+          <div id="feedback-icon" class="text-3xl shrink-0">🎉</div>
+          <div class="flex-1">
+            <h4 id="feedback-title" class="font-comic text-base tracking-wide mb-1">AMAZING JOB!</h4>
+            <p id="feedback-msg" class="font-kid text-xs sm:text-sm leading-relaxed text-slate-800">
+              Explanation goes here.
+            </p>
+          </div>
+        </div>
+        <div class="mt-3 flex justify-end">
+          <button id="next-btn" onclick="nextQuestion()" class="bg-yellow-400 hover:bg-yellow-300 active:scale-95 text-slate-900 comic-border px-5 py-2 rounded-xl font-comic text-sm tracking-wide shadow-comic flex items-center gap-1.5">
+            <span>NEXT MISSION</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: RESULTS / GRADUATION -->
+    <div id="screen-results" class="hidden bg-white comic-border-thick rounded-3xl p-6 sm:p-8 shadow-comic-lg text-center pop-in">
+      <div id="result-trophy-icon" class="text-6xl sm:text-7xl mb-3 pulse-glow">🏆</div>
+      <h2 id="result-title" class="font-comic text-3xl sm:text-4xl text-slate-900 mb-2">HERO GRADUATION!</h2>
+      <p id="result-subtitle" class="font-kid text-base sm:text-lg text-slate-600 mb-6">
+        You tackled the modal verbs and protected grammar justice!
+      </p>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-3 gap-3 max-w-md mx-auto mb-6">
+        <div class="bg-sky-50 comic-border p-3 rounded-2xl shadow-comic-sm">
+          <div class="text-xs font-bold text-sky-800 uppercase">Score</div>
+          <div id="final-score" class="font-comic text-xl sm:text-2xl text-sky-900">0</div>
+        </div>
+        <div class="bg-emerald-50 comic-border p-3 rounded-2xl shadow-comic-sm">
+          <div class="text-xs font-bold text-emerald-800 uppercase">Accuracy</div>
+          <div id="final-accuracy" class="font-comic text-xl sm:text-2xl text-emerald-900">100%</div>
+        </div>
+        <div class="bg-amber-50 comic-border p-3 rounded-2xl shadow-comic-sm">
+          <div class="text-xs font-bold text-amber-800 uppercase">Max Streak</div>
+          <div id="final-streak" class="font-comic text-xl sm:text-2xl text-amber-900">0 🔥</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button onclick="openCertificateModal()" class="bg-emerald-400 hover:bg-emerald-300 active:scale-95 comic-border-thick py-3 px-6 rounded-2xl font-comic text-sm sm:text-base text-slate-900 shadow-comic flex items-center gap-2">
+          <span>📜 Claim Hero Certificate</span>
+        </button>
+        <button onclick="showScreen('screen-welcome')" class="bg-yellow-400 hover:bg-yellow-300 active:scale-95 comic-border-thick py-3 px-6 rounded-2xl font-comic text-sm sm:text-base text-slate-900 shadow-comic flex items-center gap-2">
+          <span>🔄 Pick Another Level</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: HANDBOOK GUIDE -->
+  <div id="rulebook-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white comic-border-thick rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-comic-lg max-h-[90vh] flex flex-col justify-between">
+      <div class="flex justify-between items-center pb-3 border-b-2 border-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">⚡</span>
+          <h3 class="font-comic text-xl text-slate-900">Superhero Modal Verb Guide</h3>
+        </div>
+        <button onclick="closeModal('rulebook-modal')" class="w-8 h-8 rounded-full comic-border bg-rose-200 hover:bg-rose-300 font-bold flex items-center justify-center">✕</button>
+      </div>
+      
+      <div class="overflow-y-auto pr-2 my-4 space-y-3 font-kid text-sm sm:text-base">
+        <p class="text-slate-600">Modal auxiliary verbs help main verbs express ability, certainty, advice, and permission. They <strong class="text-rose-600">never add "-s"</strong>!</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+          <div class="p-3 bg-amber-50 comic-border rounded-xl">
+            <span class="font-comic text-amber-900 block text-sm">CAN / COULD</span>
+            <span class="font-bold text-amber-700">Ability & Polite Request:</span>
+            <p class="text-slate-700">"Leo <em>can</em> swim." (Ability)<br>"<em>Could</em> you pass the scissors?" (Polite)</p>
+          </div>
+          <div class="p-3 bg-rose-50 comic-border rounded-xl">
+            <span class="font-comic text-rose-900 block text-sm">MUST / SHOULD</span>
+            <span class="font-bold text-rose-700">Obligation & Advice:</span>
+            <p class="text-slate-700">"You <em>must</em> wear a seatbelt." (Rule)<br>"You <em>should</em> eat vegetables." (Advice)</p>
+          </div>
+          <div class="p-3 bg-purple-50 comic-border rounded-xl">
+            <span class="font-comic text-purple-900 block text-sm">MAY / MIGHT</span>
+            <span class="font-bold text-purple-700">Permission & Possibility:</span>
+            <p class="text-slate-700">"<em>May</em> I wash my hands?" (Permission)<br>"It <em>might</em> rain later." (Possibility)</p>
+          </div>
+          <div class="p-3 bg-sky-50 comic-border rounded-xl">
+            <span class="font-comic text-sky-900 block text-sm">WILL / WOULD</span>
+            <span class="font-bold text-sky-700">Future & Preference:</span>
+            <p class="text-slate-700">"We <em>will</em> start at noon." (Certain)<br>"<em>Would</em> you like an apple?" (Polite offer)</p>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50 comic-border p-3 rounded-xl text-indigo-900 text-xs">
+          <strong>Grade 5 Grammar Rule:</strong> Modals are directly followed by the <em>base form</em> of the main verb (e.g., "She must <u>study</u>", NEVER "She must <u>studies</u>" or "She must <u>to study</u>").
+        </div>
+      </div>
+
+      <button onclick="closeModal('rulebook-modal')" class="w-full bg-yellow-400 hover:bg-yellow-300 comic-border py-2.5 rounded-xl font-comic text-slate-900 shadow-comic text-sm">
+        GOT IT! BACK TO ACTION
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: PRINTABLE DIPLOMA / CERTIFICATE -->
+  <div id="certificate-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white comic-border-thick rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-comic-lg text-center relative border-8 border-amber-300">
+      
+      <button onclick="closeModal('certificate-modal')" class="no-print absolute top-3 right-3 w-8 h-8 rounded-full comic-border bg-rose-200 hover:bg-rose-300 font-bold flex items-center justify-center">✕</button>
+
+      <div class="flex justify-center items-center gap-2 mb-2">
+        <span class="text-3xl">⭐</span>
+        <span class="font-comic text-xs sm:text-sm tracking-widest text-indigo-600 uppercase">SUPERHERO ACADEMY OFFICIAL ELA ACCREDITATION</span>
+        <span class="text-3xl">⭐</span>
+      </div>
+
+      <h2 class="font-comic text-2xl sm:text-4xl text-slate-900 mb-1">CERTIFICATE OF MASTERY</h2>
+      <p class="font-kid text-slate-500 text-xs sm:text-sm mb-4">This honorary diploma certifies that cadet:</p>
+
+      <div class="max-w-md mx-auto mb-4">
+        <input id="cert-student-name" type="text" value="Super Scholar" maxlength="30" class="no-print w-full text-center font-comic text-xl sm:text-2xl text-slate-900 border-b-4 border-indigo-500 focus:outline-none focus:border-amber-500 bg-transparent py-1 px-3 placeholder-slate-400" placeholder="Type Student Name">
+        <div id="cert-print-name" class="hidden print:block font-comic text-2xl text-slate-900 border-b-2 border-slate-900 pb-1">Super Scholar</div>
+      </div>
+
+      <p class="font-kid text-slate-700 text-xs sm:text-sm max-w-md mx-auto leading-relaxed mb-6">
+        has successfully completed the <strong>Modal Auxiliary Verbs Challenge</strong> (CCSS.ELA-LITERACY.L.4.1.C & L.5), demonstrating superior skill in commanding verbs of permission, obligation, ability, and nuance!
+      </p>
+
+      <div class="grid grid-cols-2 gap-4 max-w-xs mx-auto text-left text-xs bg-amber-50 comic-border p-3 rounded-2xl mb-6">
+        <div>
+          <span class="text-slate-500 block text-[10px] uppercase font-bold">Issued By</span>
+          <span class="font-comic text-slate-900">Modal Academy</span>
+        </div>
+        <div>
+          <span class="text-slate-500 block text-[10px] uppercase font-bold">Rank</span>
+          <span class="font-comic text-emerald-700">Modal Master 5★</span>
+        </div>
+      </div>
+
+      <div class="no-print flex flex-wrap justify-center gap-3">
+        <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-500 text-white comic-border px-5 py-2.5 rounded-xl font-comic text-xs sm:text-sm shadow-comic flex items-center gap-1.5">
+          <span>🖨️ Print / Save PDF</span>
+        </button>
+        <button onclick="closeModal('certificate-modal')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 comic-border px-5 py-2.5 rounded-xl font-comic text-xs sm:text-sm shadow-comic">
+          Back to Game
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas overlay -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+  <footer class="w-full max-w-5xl text-center py-2 text-xs font-kid text-white/80">
+    Grade 5 Common Core English Language Arts • Interactive School Playground & Modal Quest
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    /* =========================================================
+       AUDIO SYNTHESIZER (Web Audio API)
+       ========================================================= */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playTone(freq, type, duration, delay = 0) {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        setTimeout(() => {
+          try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+          } catch(e) {}
+        }, delay * 1000);
+      }
+
+      playCorrect() {
+        this.playTone(523.25, 'triangle', 0.15, 0);       // C5
+        this.playTone(659.25, 'triangle', 0.15, 0.08);    // E5
+        this.playTone(783.99, 'triangle', 0.25, 0.16);    // G5
+        this.playTone(1046.50, 'triangle', 0.35, 0.24);   // C6
+      }
+
+      playWrong() {
+        this.playTone(261.63, 'sawtooth', 0.18, 0);       // C4
+        this.playTone(246.94, 'sawtooth', 0.25, 0.14);    // B3
+      }
+
+      playClick() {
+        this.playTone(440, 'sine', 0.06, 0);
+      }
+
+      playLevelComplete() {
+        const notes = [440, 554, 659, 880, 1108];
+        notes.forEach((f, i) => this.playTone(f, 'square', 0.18, i * 0.09));
+      }
+
+      toggle() {
+        this.muted = !this.muted;
+        return !this.muted;
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    /* =========================================================
+       QUESTION DATA BANK (30 Realistic Grade 5 Questions)
+       ========================================================= */
+    const QUESTION_BANK = [
+      /* LEVEL 1: SENTENCE POWER-UP */
+      {
+        level: 1,
+        category: "Safety & Rules",
+        mentor: "🦸‍♂️",
+        sentence: "When the school fire alarm rings, all classes ________ walk outside immediately.",
+        options: ["must", "might", "could", "would"],
+        correct: 0,
+        hint: "This is a strict emergency safety rule!",
+        explanation: 'Excellent! "Must" expresses an absolute obligation or necessary rule.'
+      },
+      {
+        level: 1,
+        category: "Physical Ability",
+        mentor: "🏃",
+        sentence: "Cheetahs ________ run up to 70 miles per hour across the savanna.",
+        options: ["can", "may", "shall", "must"],
+        correct: 0,
+        hint: "We are talking about physical ability and skill.",
+        explanation: 'Spot on! "Can" is used to show present physical ability or skill.'
+      },
+      {
+        level: 1,
+        category: "Polite Permission",
+        mentor: "🙋",
+        sentence: "“________ I please visit the library during study hall?” asked Leo.",
+        options: ["May", "Must", "Will", "Should"],
+        correct: 0,
+        hint: "This is the most formal, polite way to ask for permission.",
+        explanation: 'Awesome! "May" is the most polite modal auxiliary used to request permission.'
+      },
+      {
+        level: 1,
+        category: "Healthy Advice",
+        mentor: "🩺",
+        sentence: "Fifth graders ________ get at least nine hours of restful sleep every night.",
+        options: ["should", "could not", "must not", "might"],
+        correct: 0,
+        hint: "This is helpful advice for good health.",
+        explanation: 'Nice! "Should" gives healthy advice or recommendation without being a forced law.'
+      },
+      {
+        level: 1,
+        category: "Possibility",
+        mentor: "🌦️",
+        sentence: "Grab a jacket; those dark storm clouds mean it ________ rain during recess.",
+        options: ["might", "must not", "shall", "cannot"],
+        correct: 0,
+        hint: "It is possible, but not 100% guaranteed.",
+        explanation: 'Correct! "Might" shows a realistic possibility with uncertainty.'
+      },
+      {
+        level: 1,
+        category: "Past Ability",
+        mentor: "👶",
+        sentence: "When Jordan was only five years old, she ________ already swim across the lake.",
+        options: ["could", "may", "must", "should"],
+        correct: 0,
+        hint: "Think about her ability in the past.",
+        explanation: 'Great! "Could" is the past tense form of "can" expressing past ability.'
+      },
+      {
+        level: 1,
+        category: "Strict Rule",
+        mentor: "🛑",
+        sentence: "Campers ________ not leave campfire coals burning without water.",
+        options: ["must", "might", "would", "could"],
+        correct: 0,
+        hint: "This is an important safety rule to prevent forest fires.",
+        explanation: 'Bullseye! "Must not" indicates strict prohibition for safety.'
+      },
+      {
+        level: 1,
+        category: "Future Certainty",
+        mentor: "🚀",
+        sentence: "Our science team ________ present the solar system model tomorrow.",
+        options: ["will", "can to", "might have", "should to"],
+        correct: 0,
+        hint: "This is firmly planned on the calendar.",
+        explanation: 'Super! "Will" expresses definite future certainty.'
+      },
+      {
+        level: 1,
+        category: "Polite Request",
+        mentor: "🤝",
+        sentence: "________ you please hand me the glue stick?",
+        options: ["Would", "May you", "Must", "Shall"],
+        correct: 0,
+        hint: "Which word makes a courteous, respectful request to a peer?",
+        explanation: 'Perfect! "Would you please..." is courteous and polite.'
+      },
+      {
+        level: 1,
+        category: "Good Manners",
+        mentor: "🌟",
+        sentence: "You ________ say 'thank you' when someone holds the cafeteria door.",
+        options: ["should", "can", "might", "will"],
+        correct: 0,
+        hint: "It expresses thoughtful advice and good manners.",
+        explanation: 'Wonderful! "Should" communicates moral advice and courtesy.'
+      },
+
+      /* LEVEL 2: MEANING DETECTIVE */
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️",
+        sentence: "What does 'CAN' mean here: “Maya CAN play Beethoven on the piano.”",
+        options: ["Ability", "Permission", "Strict Law", "Possibility"],
+        correct: 0,
+        hint: "Maya has the skill and practice to do this.",
+        explanation: 'Brilliant deduction! "Can" highlights Maya\'s learned talent and ability.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️‍♀️",
+        sentence: "What does 'MAY' mean here: “You MAY choose a sticker from the treasure box.”",
+        options: ["Permission", "Ability", "Obligation", "Doubt"],
+        correct: 0,
+        hint: "The teacher is allowing students to pick a prize.",
+        explanation: 'Spot on! The teacher is granting permission.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️",
+        sentence: "What does 'MUST' mean here: “All bicycle riders MUST wear a helmet by law.”",
+        options: ["Obligation / Rule", "Recommendation", "Possibility", "Past Ability"],
+        correct: 0,
+        hint: "Is this a legal requirement or just an optional tip?",
+        explanation: 'Great eye! "Must" expresses a mandatory legal requirement.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️‍♀️",
+        sentence: "What does 'SHOULD' mean here: “You SHOULD stretch before running the mile.”",
+        options: ["Advice / Suggestion", "Enforced Law", "Permission", "Future Fact"],
+        correct: 0,
+        hint: "It helps prevent cramps, but you won't get a ticket if you don't.",
+        explanation: 'Exact! "Should" provides helpful guidance and advice.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️",
+        sentence: "What does 'MIGHT' mean here: “Our family MIGHT visit the zoo this weekend.”",
+        options: ["Possibility", "Permission", "Ability", "Direct Command"],
+        correct: 0,
+        hint: "It is a possibility, not an official promise.",
+        explanation: 'Bingo! "Might" signals a realistic possibility with uncertainty.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️‍♀️",
+        sentence: "What does 'COULD' mean here: “COULD you lend me a pencil for math?”",
+        options: ["Polite Request", "Strict Order", "Physical Force", "Past Habit"],
+        correct: 0,
+        hint: "Notice how soft and respectful this question is phrased.",
+        explanation: 'Well done! "Could" softens the request into polite etiquette.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️",
+        sentence: "What does 'CANNOT' mean here: “Penguins CANNOT fly in the air.”",
+        options: ["Lack of Ability", "Lack of Permission", "Mild Suggestion", "Polite Offer"],
+        correct: 0,
+        hint: "Penguin anatomy does not allow them to fly.",
+        explanation: 'True! Penguins physically lack the ability to fly in the air.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️‍♀️",
+        sentence: "What does 'SHALL' mean here: “SHALL we review the vocabulary flashcards now?”",
+        options: ["Polite Suggestion / Offer", "Strong Warning", "Past Ability", "Forbidden Act"],
+        correct: 0,
+        hint: "Used in formal English to propose an action together.",
+        explanation: 'Super! "Shall we..." is a classic, polite invitation to do something together.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️",
+        sentence: "What does 'MUST NOT' mean here: “You MUST NOT feed candy to the puppies.”",
+        options: ["Prohibition (Forbidden)", "Mild Advice", "Permission", "Ability"],
+        correct: 0,
+        hint: "Candy can make puppies sick, so it is strictly forbidden.",
+        explanation: 'Correct! "Must not" indicates that an action is prohibited.'
+      },
+      {
+        level: 2,
+        category: "Meaning Detective",
+        mentor: "🕵️‍♀️",
+        sentence: "What does 'WOULD' mean here: “WOULD you prefer strawberries or blueberries?”",
+        options: ["Preference / Polite Choice", "Strict Order", "Certain Fact", "Past Rule"],
+        correct: 0,
+        hint: "The speaker is kindly asking which fruit you like best.",
+        explanation: 'Terrific! "Would you prefer..." invites someone to state their preference.'
+      },
+      /* LEVEL 3: INTERACTIVE PLAYGROUND (Choose the correct sentence) */
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🏃‍♂️",
+        sentence: "Choose the correct sentence:",
+        options: [
+          "He can play the violin very well.",
+          "He can to play the violin very well.",
+          "He can plays the violin very well.",
+          "He canning play the violin very well."
+        ],
+        correct: 0,
+        hint: "Modals are followed by the base verb without 'to' or '-s'!",
+        explanation: 'Masterful catch! Modal verbs are followed directly by the base verb ("can play", never "can plays").'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🎯",
+        sentence: "Choose the correct sentence that shows highest certainty:",
+        options: [
+          "The museum will open at 9:00 AM.",
+          "The museum might open at 9:00 AM.",
+          "The museum could open at 9:00 AM.",
+          "The museum may open at 9:00 AM."
+        ],
+        correct: 0,
+        hint: "Look for the verb that guarantees 100% certainty.",
+        explanation: '"Will" expresses complete confidence (100% certainty). "May", "might", and "could" show doubt!'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🎩",
+        sentence: "Choose the correct sentence with polite permission:",
+        options: [
+          "May I please ask a question, Principal Vance?",
+          "Can I ask you something right now?",
+          "I will ask you a question!",
+          "You must answer my question."
+        ],
+        correct: 0,
+        hint: "Look for formal permission and courteous manners.",
+        explanation: '"May I please..." is the gold standard for formal, respectful requests to adults.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🛠️",
+        sentence: "Choose the correct sentence fixing the 'to' error:",
+        options: [
+          "Students must finish the test by noon.",
+          "Students must finishing the test by noon.",
+          "Students must to finish the test by noon.",
+          "Students must to finished by noon."
+        ],
+        correct: 0,
+        hint: "Drop the 'to' after modal verbs!",
+        explanation: 'Right! We never say "must to finish". The clean base form is "must finish".'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🔬",
+        sentence: "Choose the correct sentence for safe caution:",
+        options: [
+          "The animal might be a brown bear.",
+          "The animal must definitely be a bear.",
+          "The animal will always be a bear.",
+          "The animal shall be a bear."
+        ],
+        correct: 0,
+        hint: "Caution means not jumping to conclusions without complete evidence.",
+        explanation: 'Sharp thinking! "Might" shows cautious reasoning when evidence is still incomplete.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🏃‍♂️",
+        sentence: "Choose the correct sentence:",
+        options: [
+          "She should study her spelling words tonight.",
+          "She should studies her spelling words tonight.",
+          "She should studied her spelling words tonight.",
+          "She should to study her spelling words tonight."
+        ],
+        correct: 0,
+        hint: "The base verb after 'should' has no endings.",
+        explanation: 'Spot on! "Should study" uses the pure base verb.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🧁",
+        sentence: "Choose the correct sentence for a polite offer:",
+        options: [
+          "Would you like a slice of watermelon?",
+          "You will take watermelon now.",
+          "Must you eat watermelon?",
+          "Can you eat watermelon or what?"
+        ],
+        correct: 0,
+        hint: "Consider which sentence sounds warm and gracious.",
+        explanation: 'Hospitality star! "Would you like..." is a kind and courteous host phrasing.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "⚖️",
+        sentence: "Choose the correct sentence describing a school rule:",
+        options: [
+          "Students must walk quietly in the hallway.",
+          "Students must to walk quietly in the hallway.",
+          "Students might to walk quietly in the hallway.",
+          "Students shall walking quietly in the hallway."
+        ],
+        correct: 0,
+        hint: "A mandatory school rule uses must + base verb.",
+        explanation: 'Spot on! "Must walk" is the correct modal structure for a mandatory rule.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🛠️",
+        sentence: "Choose the correct sentence for past ability:",
+        options: [
+          "Yesterday, Liam could kick three goals.",
+          "Yesterday, Liam can kick three goals.",
+          "Yesterday, Liam can kicked three goals.",
+          "Yesterday, Liam could to kick three goals."
+        ],
+        correct: 0,
+        hint: "'Yesterday' requires the past form 'could'.",
+        explanation: 'Brilliant! "Could kick" correctly indicates past ability.'
+      },
+      {
+        level: 3,
+        category: "Choose the correct sentence",
+        mentor: "🤝",
+        sentence: "Choose the correct sentence to borrow an item politely:",
+        options: [
+          "Could I please borrow your eraser?",
+          "Give me the eraser right now!",
+          "I shall take your eraser.",
+          "You must give me your eraser."
+        ],
+        correct: 0,
+        hint: "A gentle modal verb plus 'please' shows respect for peers.",
+        explanation: 'Perfect! "Could I please borrow..." is considerate and respectful among classmates.'
+      }
+    ];
+
+    /* =========================================================
+       GAME STATE VARIABLES
+       ========================================================= */
+    let currentLevel = 1;
+    let isMarathon = false;
+    let questionsList = [];
+    let currentIndex = 0;
+    let score = 0;
+    let streak = 0;
+    let maxStreak = 0;
+    let correctCount = 0;
+    let isAnswered = false;
+
+    // Playground staggered parade state
+    let activeBoysList = [];
+    let playgroundAnimId = null;
+
+    // DOM Elements
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenGame = document.getElementById('screen-game');
+    const screenResults = document.getElementById('screen-results');
+    const topStatsBar = document.getElementById('top-stats-bar');
+    const exitBtn = document.getElementById('exit-btn');
+    const scoreCounter = document.getElementById('score-counter');
+    const streakCounter = document.getElementById('streak-counter');
+    const powerBar = document.getElementById('power-bar');
+    const audioToggleBtn = document.getElementById('audio-toggle-btn');
+    const rulebookBtn = document.getElementById('rulebook-btn');
+
+    const standardOptionsContainer = document.getElementById('standard-options-container');
+    const playgroundContainer = document.getElementById('playground-container');
+    const boysStage = document.getElementById('boys-stage');
+
+    // Controls listeners
+    audioToggleBtn.addEventListener('click', () => {
+      const active = sound.toggle();
+      audioToggleBtn.textContent = active ? '🔊' : '🔇';
+      audioToggleBtn.classList.toggle('bg-rose-100', !active);
+    });
+
+    rulebookBtn.addEventListener('click', () => {
+      sound.playClick();
+      openModal('rulebook-modal');
+    });
+
+    exitBtn.addEventListener('click', () => {
+      sound.playClick();
+      stopPlaygroundAnimation();
+      showScreen('screen-welcome');
+    });
+
+    // Student Certificate name sync
+    const certInput = document.getElementById('cert-student-name');
+    const certPrintName = document.getElementById('cert-print-name');
+    if (certInput && certPrintName) {
+      certInput.addEventListener('input', (e) => {
+        certPrintName.textContent = e.target.value.trim() || 'Super Scholar';
+      });
+    }
+
+    function showScreen(screenId) {
+      [screenWelcome, screenGame, screenResults].forEach(s => s.classList.add('hidden'));
+      document.getElementById(screenId).classList.remove('hidden');
+
+      if (screenId === 'screen-game') {
+        topStatsBar.classList.remove('hidden');
+        exitBtn.classList.remove('hidden');
+      } else {
+        topStatsBar.classList.add('hidden');
+        exitBtn.classList.add('hidden');
+      }
+    }
+
+    /* Start Game Routine */
+    function startGame(levelChoice) {
+      sound.init();
+      sound.playClick();
+      currentLevel = levelChoice;
+      isMarathon = (levelChoice === 'marathon');
+
+      if (isMarathon) {
+        questionsList = [...QUESTION_BANK].sort(() => Math.random() - 0.5);
+      } else {
+        questionsList = QUESTION_BANK.filter(q => q.level === levelChoice).sort(() => Math.random() - 0.5);
+      }
+
+      currentIndex = 0;
+      score = 0;
+      streak = 0;
+      maxStreak = 0;
+      correctCount = 0;
+      updateStats();
+      showScreen('screen-game');
+      loadQuestion();
+    }
+
+    /* Load Active Question */
+    function loadQuestion() {
+      isAnswered = false;
+      stopPlaygroundAnimation();
+
+      const q = questionsList[currentIndex];
+      const tracker = document.getElementById('question-tracker');
+      const levelBadge = document.getElementById('level-badge');
+      const categoryTag = document.getElementById('question-category');
+      const questionText = document.getElementById('question-text');
+      const questionHint = document.getElementById('question-hint');
+      const mentorAvatar = document.getElementById('mentor-avatar');
+      const feedbackCard = document.getElementById('feedback-card');
+
+      feedbackCard.classList.add('hidden');
+
+      // Update Trackers
+      tracker.textContent = `Mission ${currentIndex + 1} of ${questionsList.length}`;
+      levelBadge.textContent = isMarathon ? `Quest: Item ${currentIndex + 1}` : `Level ${q.level}`;
+      categoryTag.textContent = `Target: ${q.category}`;
+      mentorAvatar.textContent = q.mentor || '🦸';
+
+      // Format sentence
+      if (q.sentence.includes('________')) {
+        questionText.innerHTML = q.sentence.replace('________', '<span class="inline-block px-3 py-0.5 bg-yellow-200 border-b-4 border-slate-900 rounded-md text-indigo-700 font-bold">? ? ?</span>');
+      } else {
+        questionText.textContent = q.sentence;
+      }
+
+      questionHint.textContent = `💡 Hint: ${q.hint}`;
+
+      // Check whether this question uses the Interactive Playground (Level 3) or Standard Grid
+      if (q.level === 3) {
+        standardOptionsContainer.classList.add('hidden');
+        playgroundContainer.classList.remove('hidden');
+        setupPlaygroundBoys(q);
+      } else {
+        playgroundContainer.classList.add('hidden');
+        standardOptionsContainer.classList.remove('hidden');
+        setupStandardOptions(q);
+      }
+    }
+
+    /* LEVEL 1 & 2: STANDARD OPTIONS SETUP */
+    function setupStandardOptions(q) {
+      standardOptionsContainer.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3 sm:p-4 rounded-2xl comic-border bg-white hover:bg-amber-50 active:scale-[0.98] transition flex items-center gap-3 font-kid text-sm sm:text-base font-bold shadow-comic-sm";
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-xl bg-slate-100 comic-border flex items-center justify-center font-comic text-xs sm:text-sm text-slate-800 shrink-0">
+            ${String.fromCharCode(65 + idx)}
+          </span>
+          <span class="flex-1 text-slate-800">${opt}</span>
+        `;
+        btn.onclick = () => selectAnswer(idx);
+        standardOptionsContainer.appendChild(btn);
+      });
+    }
+
+    /* =========================================================
+       LEVEL 3: INTERACTIVE PLAYGROUND (STAGGERED MULTI-BOY PARADE)
+       ========================================================= */
+    const BOY_SKINS = [
+      { shirt: '#38BDF8', cap: '#F43F5E', pants: '#1E293B', skin: '#FCD34D' }, // Boy 1: Sky shirt, red cap
+      { shirt: '#10B981', cap: '#F59E0B', pants: '#334155', skin: '#FDBA74' }, // Boy 2: Green shirt, amber cap
+      { shirt: '#F43F5E', cap: '#3B82F6', pants: '#1E293B', skin: '#FCD34D' }, // Boy 3: Coral shirt, blue cap
+      { shirt: '#8B5CF6', cap: '#10B981', pants: '#334155', skin: '#FDE047' }  // Boy 4: Purple shirt, green cap
+    ];
+
+    function createBoySVG(palette) {
+      return `
+        <svg viewBox="0 0 100 130" class="w-20 h-28 sm:w-24 sm:h-32 drop-shadow-md select-none pointer-events-none">
+          <!-- Back Hair -->
+          <circle cx="50" cy="38" r="21" fill="#451a03" />
+          
+          <!-- Cap Brim & Top -->
+          <ellipse cx="50" cy="27" rx="20" ry="10" fill="${palette.cap}" stroke="#0f172a" stroke-width="2.5" />
+          <path d="M 32 28 Q 50 18 68 28 Z" fill="${palette.cap}" stroke="#0f172a" stroke-width="2.5" />
+          <path d="M 50 28 L 74 30 L 68 34 Z" fill="${palette.cap}" stroke="#0f172a" stroke-width="2" />
+          
+          <!-- Face Head -->
+          <circle cx="50" cy="40" r="17" fill="${palette.skin}" stroke="#0f172a" stroke-width="2.5" />
+          
+          <!-- Eyes -->
+          <circle cx="45" cy="38" r="2.5" fill="#0f172a" />
+          <circle cx="56" cy="38" r="2.5" fill="#0f172a" />
+          
+          <!-- Cheerful Smile -->
+          <path d="M 46 47 Q 50 52 56 47" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" />
+          
+          <!-- Boy Torso / Shirt -->
+          <rect x="36" y="56" width="28" height="28" rx="6" fill="${palette.shirt}" stroke="#0f172a" stroke-width="2.5" />
+          
+          <!-- Arms -->
+          <rect x="29" y="58" width="8" height="20" rx="4" fill="${palette.shirt}" stroke="#0f172a" stroke-width="2" />
+          <circle cx="33" cy="80" r="4" fill="${palette.skin}" stroke="#0f172a" stroke-width="2" />
+          <rect x="63" y="58" width="8" height="20" rx="4" fill="${palette.shirt}" stroke="#0f172a" stroke-width="2" />
+          <circle cx="67" cy="80" r="4" fill="${palette.skin}" stroke="#0f172a" stroke-width="2" />
+          
+          <!-- Static clean legs (no frantic walking) -->
+          <rect x="38" y="83" width="9" height="26" rx="4" fill="${palette.pants}" stroke="#0f172a" stroke-width="2.2" />
+          <path d="M 34 109 L 49 109 C 50 114 44 116 33 116 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2" />
+
+          <rect x="52" y="83" width="9" height="26" rx="4" fill="${palette.pants}" stroke="#0f172a" stroke-width="2.2" />
+          <path d="M 48 109 L 63 109 C 64 114 58 116 47 116 Z" fill="#ffffff" stroke="#0f172a" stroke-width="2" />
+        </svg>
+      `;
+    }
+
+    function setupPlaygroundBoys(q) {
+      stopPlaygroundAnimation();
+      boysStage.innerHTML = '';
+      activeBoysList = [];
+
+      const stageWidth = playgroundContainer.clientWidth || 700;
+      // Spacing between boys: minimum 340px ensures 250px bubbles have an ~90px clear gap
+      const spacing = Math.max(340, (stageWidth + 280) / 2);
+      const startBaseX = stageWidth + 40;
+
+      q.options.forEach((optText, optIndex) => {
+        const palette = BOY_SKINS[optIndex % BOY_SKINS.length];
+        const initialX = startBaseX + (optIndex * spacing);
+
+        const boyWrapper = document.createElement('div');
+        boyWrapper.className = 'absolute flex flex-col items-center cursor-pointer transition-transform duration-100 will-change-transform';
+        boyWrapper.style.bottom = '18px';
+        boyWrapper.style.zIndex = `${20 - optIndex}`;
+        boyWrapper.style.left = `${initialX}px`;
+
+        // Fixed standard size speech bubble with stem
+        const bubble = document.createElement('div');
+        bubble.className = "speech-bubble-fixed speech-bubble-stem bg-white comic-border-thick px-3 py-2 rounded-2xl shadow-comic-sm hover:scale-[1.03] active:scale-95 transition-all mb-2 flex items-center justify-center text-center";
+        bubble.innerHTML = `
+          <div class="flex items-center justify-center gap-2 w-full h-full">
+            <span class="w-6 h-6 rounded-full bg-yellow-400 comic-border text-xs font-comic flex items-center justify-center shrink-0">
+              ${String.fromCharCode(65 + optIndex)}
+            </span>
+            <span class="font-kid font-bold text-xs sm:text-sm text-slate-900 leading-snug line-clamp-3 overflow-hidden text-center flex-1">
+              ${optText}
+            </span>
+          </div>
+        `;
+
+        // Boy Figure with gentle float/glide
+        const boyAvatar = document.createElement('div');
+        boyAvatar.className = "boy-glide flex items-center justify-center";
+        boyAvatar.style.transform = 'scaleX(-1)';
+        boyAvatar.innerHTML = createBoySVG(palette);
+
+        boyWrapper.appendChild(bubble);
+        boyWrapper.appendChild(boyAvatar);
+
+        boyWrapper.onclick = (e) => {
+          e.stopPropagation();
+          selectAnswer(optIndex);
+        };
+
+        boysStage.appendChild(boyWrapper);
+
+        activeBoysList.push({
+          element: boyWrapper,
+          bubbleEl: bubble,
+          avatarEl: boyAvatar,
+          x: initialX,
+          speed: 1.15,
+          index: optIndex,
+          spacing: spacing
+        });
+      });
+
+      runPlaygroundLoop();
+    }
+
+    function runPlaygroundLoop() {
+      stopPlaygroundAnimation();
+
+      function step() {
+        if (isAnswered) return;
+
+        // Find the rightmost position among all active boys
+        let maxX = -Infinity;
+        for (let i = 0; i < activeBoysList.length; i++) {
+          if (activeBoysList[i].x > maxX) {
+            maxX = activeBoysList[i].x;
+          }
+        }
+
+        activeBoysList.forEach(boy => {
+          boy.x -= boy.speed;
+
+          // If a boy completely passes off the left edge (-300px), recycle behind the last boy
+          if (boy.x < -300) {
+            boy.x = Math.max(maxX + boy.spacing, (playgroundContainer.clientWidth || 700) + 40);
+            maxX = boy.x;
+          }
+
+          boy.element.style.left = `${boy.x}px`;
+        });
+
+        playgroundAnimId = requestAnimationFrame(step);
+      }
+
+      playgroundAnimId = requestAnimationFrame(step);
+    }
+
+    function stopPlaygroundAnimation() {
+      if (playgroundAnimId) {
+        cancelAnimationFrame(playgroundAnimId);
+        playgroundAnimId = null;
+      }
+    }
+
+    /* Process Answer Choice */
+    function selectAnswer(selectedIdx) {
+      if (isAnswered) return;
+      isAnswered = true;
+      stopPlaygroundAnimation();
+
+      const q = questionsList[currentIndex];
+      const isCorrect = (selectedIdx === q.correct);
+
+      if (q.level === 3 && activeBoysList.length > 0) {
+        activeBoysList.forEach(boy => {
+          boy.element.style.pointerEvents = 'none';
+
+          if (boy.index === selectedIdx) {
+            if (isCorrect) {
+              boy.bubbleEl.classList.remove('bg-white');
+              boy.bubbleEl.classList.add('bg-emerald-300', 'border-emerald-700', 'scale-105');
+              boy.avatarEl.classList.remove('boy-glide');
+              boy.avatarEl.classList.add('boy-jump');
+            } else {
+              boy.bubbleEl.classList.remove('bg-white');
+              boy.bubbleEl.classList.add('bg-rose-300', 'border-rose-700');
+              boy.element.classList.add('shake-anim');
+            }
+          } else if (boy.index === q.correct && !isCorrect) {
+            // Also reveal the correct one if wrong
+            boy.bubbleEl.classList.remove('bg-white');
+            boy.bubbleEl.classList.add('bg-emerald-100', 'border-emerald-600');
+          } else {
+            boy.element.style.opacity = '0.45';
+          }
+        });
+      } else if (q.level !== 3) {
+        // Standard Grid Reaction
+        const optionsButtons = standardOptionsContainer.children;
+        for (let i = 0; i < optionsButtons.length; i++) {
+          optionsButtons[i].disabled = true;
+          optionsButtons[i].classList.remove('hover:bg-amber-50', 'active:scale-[0.98]');
+          if (i === q.correct) {
+            optionsButtons[i].classList.add('bg-emerald-100', 'border-emerald-600', 'text-emerald-950');
+          } else if (i === selectedIdx && !isCorrect) {
+            optionsButtons[i].classList.add('bg-rose-100', 'border-rose-600', 'text-rose-950', 'shake-anim');
+          } else {
+            optionsButtons[i].classList.add('opacity-50');
+          }
+        }
+      }
+
+      // Handle Scoring & Sound
+      if (isCorrect) {
+        sound.playCorrect();
+        streak++;
+        if (streak > maxStreak) maxStreak = streak;
+        correctCount++;
+        const points = 100 + (streak * 15);
+        score += points;
+        triggerMiniCelebration();
+      } else {
+        sound.playWrong();
+        streak = 0;
+      }
+
+      updateStats();
+      showFeedback(isCorrect, q.explanation);
+    }
+
+    /* Feedback Banner Display */
+    function showFeedback(isCorrect, explanation) {
+      const feedbackCard = document.getElementById('feedback-card');
+      const feedbackIcon = document.getElementById('feedback-icon');
+      const feedbackTitle = document.getElementById('feedback-title');
+      const feedbackMsg = document.getElementById('feedback-msg');
+
+      feedbackCard.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-600', 'bg-rose-50', 'border-rose-600');
+
+      if (isCorrect) {
+        feedbackCard.classList.add('bg-emerald-50', 'border-emerald-600');
+        feedbackIcon.textContent = streak > 2 ? '🔥' : '⭐';
+        feedbackTitle.textContent = streak > 2 ? `SUPER COMBO x${streak}! FABULOUS!` : 'CORRECT ANSWER!';
+        feedbackTitle.className = "font-comic text-base tracking-wide text-emerald-800";
+      } else {
+        feedbackCard.classList.add('bg-rose-50', 'border-rose-600');
+        feedbackIcon.textContent = '💡';
+        feedbackTitle.textContent = 'GRAMMAR CLUE!';
+        feedbackTitle.className = "font-comic text-base tracking-wide text-rose-800";
+      }
+
+      feedbackMsg.textContent = explanation;
+    }
+
+    /* Next Question / Finish Level */
+    function nextQuestion() {
+      sound.playClick();
+      currentIndex++;
+      if (currentIndex < questionsList.length) {
+        loadQuestion();
+      } else {
+        finishLevel();
+      }
+    }
+
+    /* Update Top Dashboard */
+    function updateStats() {
+      scoreCounter.textContent = `${score} pts`;
+      streakCounter.textContent = streak;
+
+      const progressRatio = (currentIndex + 1) / questionsList.length;
+      powerBar.style.width = `${Math.min(100, Math.round(progressRatio * 100))}%`;
+    }
+
+    /* Level Completed Routine */
+    function finishLevel() {
+      stopPlaygroundAnimation();
+      sound.playLevelComplete();
+      launchConfetti();
+      showScreen('screen-results');
+
+      const accuracy = Math.round((correctCount / questionsList.length) * 100) || 0;
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+      document.getElementById('final-streak').textContent = `${maxStreak} 🔥`;
+
+      const title = document.getElementById('result-title');
+      const trophy = document.getElementById('result-trophy-icon');
+      const subtitle = document.getElementById('result-subtitle');
+
+      if (accuracy >= 80) {
+        title.textContent = "SUPERHERO GRADUATION!";
+        trophy.textContent = "🏆";
+        subtitle.textContent = "Spectacular! You have mastered the powers of modal auxiliary verbs!";
+      } else if (accuracy >= 60) {
+        title.textContent = "PLAYGROUND MASTER!";
+        trophy.textContent = "🥈";
+        subtitle.textContent = "Great job! A quick review of the Handbook will make your skills invincible!";
+      } else {
+        title.textContent = "CADET IN TRAINING!";
+        trophy.textContent = "🎖️";
+        subtitle.textContent = "Nice practice! Remember: modals help main verbs show obligation, advice, and ability!";
+      }
+    }
+
+    /* Modal Controls */
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      sound.playClick();
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openCertificateModal() {
+      sound.playClick();
+      openModal('certificate-modal');
+    }
+
+    /* =========================================================
+       CONFETTI SYSTEM
+       ========================================================= */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function triggerMiniCelebration() {
+      spawnConfetti(25);
+    }
+
+    function launchConfetti() {
+      spawnConfetti(120);
+    }
+
+    function spawnConfetti(count) {
+      const colors = ['#FCD34D', '#FB923C', '#38BDF8', '#8B5CF6', '#EC4899', '#10B981'];
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: -20 - (Math.random() * 50),
+          size: Math.random() * 8 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 5,
+          vy: Math.random() * 4 + 3,
+          rot: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10
+        });
+      }
+      if (!confettiAnimId) {
+        updateConfetti();
+      }
+    }
+
+    function updateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < confettiParticles.length; i++) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.rotSpeed;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rot * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      }
+
+      confettiParticles = confettiParticles.filter(p => p.y < canvas.height + 30);
+
+      if (confettiParticles.length > 0) {
+        confettiAnimId = requestAnimationFrame(updateConfetti);
+      } else {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+    }
+
+    window.onload = function() {
+      resizeCanvas();
+    };
+  </script>
+</body>
+</html>
